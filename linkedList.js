@@ -1,53 +1,99 @@
 export class LinkedList {
-  head = null; // head is NOT a separate node, but a REFERENCE to the first element
+  #head = null; // head is NOT a separate node, but a REFERENCE to the first element
+  #size = 0;
   constructor() {}
 
   append(value) {
     // if our head is not referencing any node, we prepend it
-    if (this.head === null) {
+    if (this.#head === null) {
       this.prepend(value);
     } else {
-      let cur = this.head;
-      while (cur.next !== null) cur = cur.next; // traverse to the next node until it reaches the tail
+      let cur = this.#head;
+      while (cur.next !== null) cur = cur.next; // traverse all nodes and STOP at the tail
       cur.next = new Node(value, null);
     }
   }
   prepend(value) {
-    // add a new node to the start of the list
-    this.head = new Node(value, this.head);
+    this.#head = new Node(value, this.#head);
   }
   size() {
-    // return the total number of nodes in the list
+    if (this.#head === null) return 0;
+    let cur = this.#head;
+    let count = 0;
+
+    // traverse all nodes
+    while (cur !== null) {
+      count++;
+      cur = cur.next;
+    }
+
+    return count;
   }
   head() {
-    // return the value of the first node in the list, if non existent return undefined
-    if (this.head === null) return undefined;
+    if (this.#head === null) return undefined;
+    return this.#head;
   }
   tail() {
-    // return the value of the last node in the list, if non existent return undefined
-    if (this.head === null) return undefined;
+    if (this.#head === null) return undefined;
+
+    let cur = this.#head;
+    while (cur.next !== null) cur = cur.next; // traverse all nodes and STOP at the tail
+    return cur;
   }
   at(index) {
     // return the value of the node at the given index, if non existent return undefined
+    let cur = this.#head;
+
+    let i = 0;
+    while (cur !== null && i !== index) {
+      i++;
+      cur = cur.next;
+    }
+
+    if (cur !== null && i === index) return cur;
+    return undefined;
   }
   pop() {
-    // remove and return the head node, if non existent return undefined
-    if (this.head === null) return undefined;
+    if (this.#head === null) return undefined;
+
+    const temp = this.#head;
+    this.#head = this.#head.next;
+
+    // remove link from the list
+    temp.next = null;
+    return temp;
   }
   contains(value) {
-    // return true if value exists on the list, if non existent return undefined
+    let found = false;
+
+    let cur = this.#head;
+    while (cur !== null) {
+      if (cur.data === value) found = true;
+      cur = cur.next;
+    }
+
+    return found;
   }
   findIndex(value) {
-    // return index of the node containing the given value, if non existent return -1, if more than one value contains it return the first one
+    let cur = this.#head;
+    let index = 0;
+
+    // traverse all nodes while we dont find the data
+    while (cur !== null && cur.data !== value) {
+      index++;
+      cur = cur.next;
+    }
+
+    if (cur !== null && cur.data === value) return index;
+    return -1;
   }
   toString() {
-    // represent the list objects as strings, if empty return an empty string. i.e. ( value ) -> ( value ) -> null
     let str = "";
-    if (this.head === null) return str;
+    if (this.#head === null) return str;
 
-    // traverse to the next node until it reaches the tail
-    let cur = this.head;
-    while (cur.next !== null) {
+    // traverse all nodes
+    let cur = this.#head;
+    while (cur !== null) {
       str += `( ${cur.data.toString()} ) -> `;
       cur = cur.next;
     }
