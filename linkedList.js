@@ -41,7 +41,6 @@ export class LinkedList {
     return cur;
   }
   at(index) {
-    // return the value of the node at the given index, if non existent return undefined
     let cur = this.#head;
 
     let i = 0;
@@ -50,7 +49,7 @@ export class LinkedList {
       cur = cur.next;
     }
 
-    if (cur !== null && i === index) return cur;
+    if (cur !== null) return cur;
     return undefined;
   }
   pop() {
@@ -84,7 +83,7 @@ export class LinkedList {
       cur = cur.next;
     }
 
-    if (cur !== null && cur.data === value) return index;
+    if (cur !== null) return index;
     return -1;
   }
   toString() {
@@ -103,9 +102,54 @@ export class LinkedList {
   }
   insertAt(index, ...values) {
     // insert new nodes with the given values at the given index
+    let curr = this.#head;
+    let i = 0;
+    while (curr !== null && i !== index) {
+      i++;
+      curr = curr.next;
+    }
+
+    if (curr === null)
+      throw new RangeError("Index is either non existent or out of bounds");
+
+    // create new nodes
+    const newNodes = values.map((val) => new Node(val, null));
+
+    // connect them IF they can be connected
+    for (let j = 0; j < newNodes.length; j++) {
+      const currNode = newNodes[j];
+      const nextNode = newNodes[j + 1];
+      if (nextNode !== undefined) {
+        currNode.next = nextNode;
+      }
+    }
+
+    let tempNext = curr.next; // store original next node (node || null)
+    curr.next = newNodes[0]; // point to the first one
+    newNodes[newNodes.length - 1].next = tempNext; // make the last new node point to the original next node
   }
   removeAt(index) {
-    // removes the node at the given index, if the index is out of bounds ( 0 > index => list.length) throw RangeError
+    let curr = this.#head;
+    let prev = null;
+
+    let i = 0;
+    while (curr !== null && i !== index) {
+      i++;
+      prev = curr;
+      curr = curr.next;
+    }
+
+    if (curr === null)
+      throw new RangeError("Index is either non existent or out of bounds");
+
+    // if the item to remove is at the start of the list, update the head
+    if (index === 0) {
+      this.#head = curr.next;
+    } else {
+      prev.next = curr.next;
+    }
+
+    curr.next = null;
   }
 }
 

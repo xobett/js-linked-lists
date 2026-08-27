@@ -1,13 +1,11 @@
 import { LinkedList } from "./linkedList.js";
 
 const linkedList = new LinkedList();
+linkedList.append("Cesar");
 linkedList.append("Abraham");
-linkedList.append("Abraham");
-linkedList.append("Naruto");
-linkedList.append("Abraham");
-linkedList.append("Abraham");
-linkedList.append("Abraham");
+linkedList.append("Betancourt");
+linkedList.append("Chavez");
 console.log(linkedList.size());
 console.log(linkedList.toString());
-console.log(linkedList.findIndex("Naruto"));
-console.log(linkedList.at(3));
+linkedList.removeAt(1);
+console.log(linkedList.toString());
